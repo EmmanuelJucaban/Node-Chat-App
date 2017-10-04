@@ -1,4 +1,4 @@
-// The code here is for client connecting to the server
+  // The code here is for client connecting to the server
 var socket = io();
 
 function scrollToBottom() {
@@ -20,10 +20,30 @@ function scrollToBottom() {
 
 socket.on('connect', function() {
   console.log('Connected to server');
+  var params = $.deparam(window.location.search);
+
+  socket.emit('join', params, function(err) {
+    if(err) {
+      alert(err);
+      window.location.href = '/'
+    } else {
+
+    }
+  });
 });
 
 socket.on('disconnect', function() {
   console.log('disconnected from server');
+});
+
+socket.on('updateUserList', function(users) {
+  var ol = $('<ol></ol>');
+
+  users.forEach(function(user) {
+    ol.append($('<li></li>').text(user));
+  });
+
+  $('#users').html(ol);
 });
 
 socket.on('newMessage', function(message) {
